@@ -23,26 +23,35 @@ public final class Optimizer {
         List<Instruction> current = ir;
         int lastSize;
 
-        if(this.debug) System.out.println("Optimizing:");
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Optimizing:\n");
 
+        int pass = 0;
         do {
+            pass++;
             lastSize = current.size();
+
+            final StringBuilder passSB = new StringBuilder();
+            passSB.append("  ");
+            passSB.append(pass);
+            passSB.append(".\n");
 
             for(final Optimization opt : this.opts) {
                 int prevSize = current.size();
 
                 current = opt.optimize(current);
 
-                if(this.debug) {
-                    final int diff = prevSize - current.size();
-                    if(diff > 0)
-                        System.out.printf("    - %s removed %d instructions\n", opt.getClass().getSimpleName(), diff);
-                }
+                final int diff = prevSize - current.size();
+                if(diff > 0)
+                    passSB.append(String.format("    - %s removed %d instructions\n", opt.getClass().getSimpleName(), diff));
             }
+
+            if(current.size() != lastSize) sb.append(passSB.toString());
         } while(current.size() != lastSize);
 
-        if(this.debug)
-            System.out.printf("Optimizations removed a total of %d instructions\n\n", ir.size() - current.size());
+        sb.append(String.format("Optimizations removed a total of %d instructions\n\n", ir.size() - current.size()));
+
+        if(this.debug) System.out.println(sb.toString());
 
         return current;
     }
