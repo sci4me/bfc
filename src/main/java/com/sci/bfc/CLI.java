@@ -37,6 +37,7 @@ public final class CLI {
             optimizer.addPass(Contraction.INSTANCE);
             optimizer.addPass(ClearLoopRemoval.INSTANCE);
             optimizer.addPass(ClearAdjustOptimization.INSTANCE);
+            optimizer.addPass(AdjustSetOptimization.INSTANCE);
             optimizer.addPass(SetDeduplication.INSTANCE);
             optimizer.addPass(NullInstructionRemoval.INSTANCE);
 

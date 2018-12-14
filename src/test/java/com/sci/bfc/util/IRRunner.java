@@ -88,7 +88,6 @@ public final class IRRunner implements IVisitor {
     @Override
     public void visitWrite(final Write insn) {
         this.stdout.add(this.tape[this.dp]);
-        System.out.print((char) this.tape[this.dp]);
     }
 
     @Override
