@@ -29,4 +29,8 @@ public final class Stack<T> {
         this.head = this.head.prev;
         return value;
     }
+
+    public boolean isEmpty() {
+        return this.head == null;
+    }
 }
