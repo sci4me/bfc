@@ -49,8 +49,8 @@ public final class IRRunner implements IVisitor {
     }
 
     private int wrap(final int n) {
-        if(n < 0) return n + 0xFF;
-        if(n > 0xFF) return n - 0xFF;
+        if(n < 0) return n + 0x100;
+        if(n > 0xFF) return n - 0x100;
         return n;
     }
 
@@ -111,6 +111,8 @@ public final class IRRunner implements IVisitor {
 
     @Override
     public void visitMul(final Mul insn) {
-        this.tape[this.dp + insn.offset] += this.tape[this.dp] * insn.factor;
+        final int i = this.dp + insn.offset;
+        final int n = this.wrap(this.tape[this.dp] * insn.factor);
+        this.tape[i] = this.wrap(this.tape[i] + n);
     }
 }

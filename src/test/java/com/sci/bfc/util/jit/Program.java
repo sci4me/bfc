@@ -30,7 +30,7 @@ public abstract class Program {
         this.tape[this.dp] = Program.wrap(this.stdin.remove(0));
     }
 
-    protected void write() {
+    protected final void write() {
         this.stdout.add(this.tape[this.dp]);
     }
 
