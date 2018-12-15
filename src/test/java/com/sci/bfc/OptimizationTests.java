@@ -39,6 +39,7 @@ public final class OptimizationTests {
 //                "/opts/clear_adjust_optimization.bf",
 //                "/opts/set_deduplication.bf",
 //                "/opts/null_instruction_removal.bf",
+                "/opts/multi.bf",
 //                "/fib2.bf",
 //                "/hw.bf",
 //                "/dbfi_hw.bf",

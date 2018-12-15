@@ -62,6 +62,7 @@ public final class CCodeGenerator implements IVisitor {
         this.increaseIndent();
         this.indent();
         this.emitLine("u64 tape_size = " + this.tapeSize + ";");
+        this.indent();
         this.emitLine("u8 *tape = (u8*) mmap(0, tape_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);");
         this.indent();
         this.emitLine("u8 *dp = tape;");
@@ -70,6 +71,7 @@ public final class CCodeGenerator implements IVisitor {
 
         this.indent();
         this.emitLine("munmap(tape, tape_size);");
+        this.indent();
         this.emitLine("return 0;");
         this.emit("}");
 
