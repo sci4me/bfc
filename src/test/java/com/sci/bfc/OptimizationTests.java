@@ -34,18 +34,18 @@ public final class OptimizationTests {
         final int tapeSize = 30000;
 
         final String[] files = new String[]{
-                "/opts/contraction.bf",
-                "/opts/clear_loop_removal.bf",
-                "/opts/clear_adjust_optimization.bf",
-                "/opts/set_deduplication.bf",
-                "/opts/null_instruction_removal.bf",
-
-                "/fib2.bf",
-                "/hw.bf",
-                "/dbfi_hw.bf",
-                "/dbfi_squares.bf",
-                "/hanoi.bf",
-                "/sierpinski.bf"
+//                "/opts/contraction.bf",
+//                "/opts/clear_loop_removal.bf",
+//                "/opts/clear_adjust_optimization.bf",
+//                "/opts/set_deduplication.bf",
+//                "/opts/null_instruction_removal.bf",
+//                "/fib2.bf",
+//                "/hw.bf",
+//                "/dbfi_hw.bf",
+//                "/dbfi_squares.bf",
+//                "/hanoi.bf",
+//                "/sierpinski.bf",
+                "/mandelbrot.bf"
         };
 
         for(final String file : files) {

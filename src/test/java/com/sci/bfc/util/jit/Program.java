@@ -23,12 +23,19 @@ public abstract class Program implements Runnable {
         this.dp = 0;
     }
 
+    protected final void mul(final int offset, final int factor) {
+        final int i = this.dp + offset;
+        if(i < 0 || i >= this.tape.length) return;
+        this.tape[i] = Program.wrap(this.tape[i] + Program.wrap(this.tape[this.dp] * factor));
+    }
+
     protected final void read() {
         this.tape[this.dp] = Program.wrap(this.stdin.remove(0));
     }
 
     protected final void write() {
         this.stdout.add(this.tape[this.dp]);
+        System.out.print((char) this.tape[this.dp]);
     }
 
     public final int[] getTape() {

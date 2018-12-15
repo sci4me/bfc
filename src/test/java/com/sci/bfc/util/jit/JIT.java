@@ -7,6 +7,7 @@ import jdk.internal.org.objectweb.asm.Label;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Type;
 
+import java.io.PrintStream;
 import java.util.List;
 
 import static jdk.internal.org.objectweb.asm.Opcodes.*;
@@ -172,30 +173,40 @@ public final class JIT {
             this.generateWrap(mv);
             mv.visitInsn(IASTORE);
         } else if(insn instanceof Mul) {
+//            mv.visitVarInsn(ALOAD, 0);
+//            mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
+//            mv.visitVarInsn(ALOAD, 0);
+//            mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
+//            mv.visitLdcInsn(((Mul) insn).offset);
+//            mv.visitInsn(IADD);
+//
+//            mv.visitInsn(DUP);
+//            mv.visitFieldInsn(GETSTATIC, Type.getInternalName(System.class), "out", "L" + Type.getInternalName(PrintStream.class) + ";");
+//            mv.visitInsn(SWAP);
+//            mv.visitMethodInsn(INVOKEVIRTUAL, Type.getInternalName(PrintStream.class), "println", "(I)V");
+//
+//            mv.visitInsn(DUP2);
+//
+//            mv.visitInsn(IALOAD);
+//
+//            mv.visitVarInsn(ALOAD, 0);
+//            mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
+//            mv.visitVarInsn(ALOAD, 0);
+//            mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
+//            mv.visitInsn(IALOAD);
+//
+//            mv.visitLdcInsn(((Mul) insn).factor);
+//            mv.visitInsn(IMUL);
+//            this.generateWrap(mv);
+//            mv.visitInsn(IADD);
+//            this.generateWrap(mv);
+//
+//            mv.visitInsn(IASTORE);
+
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
             mv.visitLdcInsn(((Mul) insn).offset);
-            mv.visitInsn(IADD);
-
-            mv.visitInsn(DUP2);
-
-            mv.visitInsn(IALOAD);
-
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
-            mv.visitInsn(IALOAD);
-
             mv.visitLdcInsn(((Mul) insn).factor);
-            mv.visitInsn(IMUL);
-            this.generateWrap(mv);
-            mv.visitInsn(IADD);
-            this.generateWrap(mv);
-
-            mv.visitInsn(IASTORE);
+            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "mul", "(II)V");
         } else {
             throw new RuntimeException(insn.getClass().toString());
         }

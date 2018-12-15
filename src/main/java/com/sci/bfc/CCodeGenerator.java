@@ -43,10 +43,11 @@ public final class CCodeGenerator implements IVisitor {
     }
 
     public String compile() {
-        this.emitLine("#include <stdlib.h>");
         this.emitLine("#include <stdio.h>");
+        this.emitLine("#include <sys/mman.h>");
 
         this.emitLine("typedef unsigned char u8;");
+        this.emitLine("typedef unsigned long long u64;");
 
         this.emitLine("#define ADJUST(delta) *dp += delta");
         this.emitLine("#define SELECT(delta) dp += delta");
@@ -60,13 +61,15 @@ public final class CCodeGenerator implements IVisitor {
         this.emitLine("int main() {");
         this.increaseIndent();
         this.indent();
-        this.emitLine("u8 *tape = (u8*) calloc(" + this.tapeSize + ", sizeof(u8));");
+        this.emitLine("u64 tape_size = " + this.tapeSize + ";");
+        this.emitLine("u8 *tape = (u8*) mmap(0, tape_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);");
         this.indent();
         this.emitLine("u8 *dp = tape;");
 
         this.ir.forEach(n -> n.accept(this));
 
         this.indent();
+        this.emitLine("munmap(tape, tape_size);");
         this.emitLine("return 0;");
         this.emit("}");
 
