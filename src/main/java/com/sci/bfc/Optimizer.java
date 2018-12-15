@@ -1,9 +1,10 @@
 package com.sci.bfc;
 
 import com.sci.bfc.ir.Instruction;
-import com.sci.bfc.opts.Optimization;
+import com.sci.bfc.opts.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class Optimizer {
@@ -13,6 +14,16 @@ public final class Optimizer {
     public Optimizer(final boolean debug) {
         this.debug = debug;
         this.opts = new ArrayList<>();
+    }
+
+    public void addStandardPasses() {
+        this.addPass(Contraction.INSTANCE);
+        this.addPass(ClearLoopRemoval.INSTANCE);
+        this.addPass(MultiLoopOptimization.INSTANCE);
+        this.addPass(ClearAdjustOptimization.INSTANCE);
+        this.addPass(AdjustSetOptimization.INSTANCE);
+        this.addPass(SetDeduplication.INSTANCE);
+        this.addPass(NullInstructionRemoval.INSTANCE);
     }
 
     public void addPass(final Optimization opt) {
@@ -39,7 +50,7 @@ public final class Optimizer {
             for(final Optimization opt : this.opts) {
                 int prevSize = current.size();
 
-                current = opt.optimize(current);
+                current = opt.optimize(Collections.unmodifiableList(current));
 
                 final int diff = prevSize - current.size();
                 if(diff > 0)

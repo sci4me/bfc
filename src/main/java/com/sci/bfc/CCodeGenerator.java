@@ -55,6 +55,7 @@ public final class CCodeGenerator implements IVisitor {
         this.emitLine("#define OPEN(loop) loop_##loop##_start: if(!*dp) goto loop_##loop##_end;");
         this.emitLine("#define CLOSE(loop) if(*dp) goto loop_##loop##_start; loop_##loop##_end:");
         this.emitLine("#define SET(value) *dp = value");
+        this.emitLine("#define MUL(offset, factor) *(dp + offset) += *dp * factor");
 
         this.emitLine("int main() {");
         this.increaseIndent();
@@ -116,5 +117,11 @@ public final class CCodeGenerator implements IVisitor {
     public void visitSet(final Set insn) {
         this.indent();
         this.emitLine("SET(%d);", insn.value);
+    }
+
+    @Override
+    public void visitMul(final Mul insn) {
+        this.indent();
+        this.emitLine("MUL(%d, %d);", insn.offset, insn.factor);
     }
 }

@@ -2,7 +2,6 @@ package com.sci.bfc;
 
 import com.sci.bfc.ir.Instruction;
 import com.sci.bfc.ir.Parser;
-import com.sci.bfc.opts.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,18 +33,13 @@ public final class CLI {
             final List<Instruction> ir = Parser.parse(code);
 
             final Optimizer optimizer = new Optimizer(true);
-            optimizer.addPass(Contraction.INSTANCE);
-            optimizer.addPass(ClearLoopRemoval.INSTANCE);
-            optimizer.addPass(ClearAdjustOptimization.INSTANCE);
-            optimizer.addPass(AdjustSetOptimization.INSTANCE);
-            optimizer.addPass(SetDeduplication.INSTANCE);
-            optimizer.addPass(NullInstructionRemoval.INSTANCE);
+            optimizer.addStandardPasses();
 
             final List<Instruction> optimizedIR = optimizer.optimize(ir);
 
             final CCodeGenerator compiler = new CCodeGenerator(optimizedIR, 30000);
 
-            try (final PrintWriter out = new PrintWriter(new File(file.getParentFile(), file.getName() + ".c"))) {
+            try(final PrintWriter out = new PrintWriter(new File(file.getParentFile(), file.getName() + ".c"))) {
                 out.print(compiler.compile());
             }
         } catch(IOException e) {

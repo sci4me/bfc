@@ -1,0 +1,5 @@
+#!/bin/bash
+java -cp out/production/bfc com.sci.bfc.CLI $1
+gcc "$1.c"
+./a.out
+rm a.out

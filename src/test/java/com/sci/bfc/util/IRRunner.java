@@ -108,4 +108,9 @@ public final class IRRunner implements IVisitor {
     public void visitSet(final Set insn) {
         this.tape[this.dp] = this.wrap(insn.value);
     }
+
+    @Override
+    public void visitMul(final Mul insn) {
+        this.tape[this.dp + insn.offset] += this.tape[this.dp] * insn.factor;
+    }
 }

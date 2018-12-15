@@ -43,39 +43,39 @@ public final class OptimizationTests {
         };
 
         for(final String file : files) {
-            System.out.println("Running regression test for '" + file + "' ...");
+            try {
+                System.out.println("Running regression test for '" + file + "' ...");
 
-            final String input = this.readFile(file);
-            final String[] parts = input.split(";");
-            final List<Instruction> ir = Parser.parse(parts[0]);
+                final String input = this.readFile(file);
+                final String[] parts = input.split(";");
+                final List<Instruction> ir = Parser.parse(parts[0]);
 
-            final List<Integer> stdin;
-            if(parts.length == 2) {
-                stdin = parts[1].chars().boxed().collect(Collectors.toList());
-            } else {
-                stdin = new ArrayList<>();
+                final List<Integer> stdin;
+                if(parts.length == 2) {
+                    stdin = parts[1].chars().boxed().collect(Collectors.toList());
+                } else {
+                    stdin = new ArrayList<>();
+                }
+
+                final Optimizer optimizer = new Optimizer(false);
+                optimizer.addStandardPasses();
+
+                final List<Instruction> optimized = optimizer.optimize(ir);
+
+                final IRRunner expected = this.run(ir, tapeSize, stdin);
+                final IRRunner actual = this.run(optimized, tapeSize, stdin);
+
+                if(!Arrays.equals(expected.getTape(), actual.getTape()))
+                    throw new RuntimeException("Tape mismatch");
+
+                if(!expected.getOutput().equals(actual.getOutput()))
+                    throw new RuntimeException("Output mismatch");
+
+                System.out.println("    - SUCCSES\n");
+            } catch(final Throwable t) {
+                System.err.println("Regression in '" + file + "'");
+                throw t;
             }
-
-            final Optimizer optimizer = new Optimizer(false);
-            optimizer.addPass(Contraction.INSTANCE);
-            optimizer.addPass(ClearLoopRemoval.INSTANCE);
-            optimizer.addPass(ClearAdjustOptimization.INSTANCE);
-            optimizer.addPass(AdjustSetOptimization.INSTANCE);
-            optimizer.addPass(SetDeduplication.INSTANCE);
-            optimizer.addPass(NullInstructionRemoval.INSTANCE);
-
-            final List<Instruction> optimized = optimizer.optimize(ir);
-
-            final IRRunner expected = this.run(ir, tapeSize, stdin);
-            final IRRunner actual = this.run(optimized, tapeSize, stdin);
-
-            if(!Arrays.equals(expected.getTape(), actual.getTape()))
-                throw new RuntimeException("Tape mismatch");
-
-            if(!expected.getOutput().equals(actual.getOutput()))
-                throw new RuntimeException("Output mismatch");
-
-            System.out.println("    - SUCCSES\n");
         }
     }
 }

@@ -14,4 +14,6 @@ public interface IVisitor {
     void visitClose(final Close insn);
 
     void visitSet(final Set insn);
+
+    void visitMul(final Mul insn);
 }
