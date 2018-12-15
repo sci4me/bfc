@@ -2,8 +2,9 @@ package com.sci.bfc;
 
 import com.sci.bfc.ir.Instruction;
 import com.sci.bfc.ir.Parser;
-import com.sci.bfc.opts.*;
-import com.sci.bfc.util.IRRunner;
+import com.sci.bfc.opts.Contraction;
+import com.sci.bfc.util.jit.JIT;
+import com.sci.bfc.util.jit.Program;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,10 +21,11 @@ public final class OptimizationTests {
         return new String(Files.readAllBytes(Paths.get(OptimizationTests.class.getResource(file).toURI())));
     }
 
-    private IRRunner run(final List<Instruction> ir, final int tapeSize, final List<Integer> stdin) {
-        final IRRunner runner = new IRRunner(ir, tapeSize, stdin);
-        runner.run();
-        return runner;
+    private Program run(final List<Instruction> ir, final int tapeSize, final List<Integer> stdin) {
+        final JIT jit = new JIT(ir);
+        final Program program = jit.compile(stdin, tapeSize);
+        program.run();
+        return program;
     }
 
     @Test
@@ -37,8 +39,10 @@ public final class OptimizationTests {
                 "/opts/set_deduplication.bf",
                 "/opts/null_instruction_removal.bf",
 
-                "/dbfi_hw.bf",
-                "/dbfi_squares.bf",
+                "/fib2.bf",
+                "/hw.bf",
+//                "/dbfi_hw.bf",
+//                "/dbfi_squares.bf",
                 "/hanoi.bf"
         };
 
@@ -62,14 +66,17 @@ public final class OptimizationTests {
 
                 final List<Instruction> optimized = optimizer.optimize(ir);
 
-                final IRRunner expected = this.run(ir, tapeSize, stdin);
-                final IRRunner actual = this.run(optimized, tapeSize, stdin);
+                final Program expected = this.run(ir, tapeSize, stdin);
+                final Program actual = this.run(optimized, tapeSize, stdin);
 
                 if(!Arrays.equals(expected.getTape(), actual.getTape()))
                     throw new RuntimeException("Tape mismatch");
 
                 if(!expected.getOutput().equals(actual.getOutput()))
                     throw new RuntimeException("Output mismatch");
+
+                if(expected.getDP() != actual.getDP())
+                    throw new RuntimeException("Data Pointer mismatch");
 
                 System.out.println("    - SUCCSES\n");
             } catch(final Throwable t) {
