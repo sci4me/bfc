@@ -44,7 +44,8 @@ public final class OptimizationTests {
                 "/hw.bf",
                 "/dbfi_hw.bf",
                 "/dbfi_squares.bf",
-                "/hanoi.bf"
+                "/hanoi.bf",
+                "/sierpinski.bf"
         };
 
         for(final String file : files) {
