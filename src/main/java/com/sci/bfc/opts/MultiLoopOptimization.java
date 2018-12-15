@@ -61,7 +61,9 @@ public final class MultiLoopOptimization implements Optimization {
                     }
                 }
 
-                if(dp == 0 && deltas.containsKey(0) && deltas.get(0) == -1) {
+                final boolean allPositive = deltas.values().stream().allMatch(n -> n > 0);
+
+                if(allPositive && dp == 0 && deltas.size() >= 2 && deltas.containsKey(0) && deltas.get(0) == -1) {
                     deltas.remove(0);
 
                     for(final Map.Entry<Integer, Integer> entry : deltas.entrySet()) {

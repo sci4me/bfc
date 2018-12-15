@@ -29,7 +29,6 @@ public abstract class Program implements Runnable {
 
     protected final void write() {
         this.stdout.add(this.tape[this.dp]);
-        System.out.print((char) this.tape[this.dp]);
     }
 
     public final int[] getTape() {
