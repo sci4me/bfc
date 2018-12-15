@@ -5,9 +5,6 @@ import java.util.List;
 
 public abstract class Program implements Runnable {
     protected static int wrap(final int n) {
-//        if(n < 0) return 256 - Math.abs(n) % 256;
-//        if(n > 255) return n % 256;
-
         if(n < 0) return n + 256;
         if(n > 255) return n - 256;
         return n;
@@ -20,7 +17,7 @@ public abstract class Program implements Runnable {
     protected int dp;
 
     public Program(final List<Integer> stdin, final int tapeSize) {
-        this.stdin = stdin;
+        this.stdin = new ArrayList<>(stdin);
         this.stdout = new ArrayList<>();
         this.tape = new int[tapeSize];
         this.dp = 0;

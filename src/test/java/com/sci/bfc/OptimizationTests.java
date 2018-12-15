@@ -2,7 +2,6 @@ package com.sci.bfc;
 
 import com.sci.bfc.ir.Instruction;
 import com.sci.bfc.ir.Parser;
-import com.sci.bfc.util.IRRunner;
 import com.sci.bfc.util.jit.JIT;
 import com.sci.bfc.util.jit.Program;
 import org.junit.Test;
@@ -63,14 +62,9 @@ public final class OptimizationTests {
                 }
 
                 final Optimizer optimizer = new Optimizer(false);
-//                optimizer.addStandardPasses();
+                optimizer.addStandardPasses();
 
                 final List<Instruction> optimized = optimizer.optimize(ir);
-
-                final IRRunner runner = new IRRunner(optimized, tapeSize, stdin);
-                runner.run();
-                System.out.print("Runner output: ");
-                System.out.println(runner.getOutput().stream().map(n -> String.valueOf((char) n.intValue())).collect(Collectors.joining()));
 
                 final Program expected = this.run(ir, tapeSize, stdin);
                 final Program actual = this.run(optimized, tapeSize, stdin);
