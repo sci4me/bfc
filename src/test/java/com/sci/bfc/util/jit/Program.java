@@ -3,7 +3,7 @@ package com.sci.bfc.util.jit;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Program {
+public abstract class Program implements Runnable {
     protected static int wrap(final int n) {
 //        if(n < 0) return 256 - Math.abs(n) % 256;
 //        if(n > 255) return n % 256;

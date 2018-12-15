@@ -7,8 +7,6 @@ import com.sci.bfc.util.jit.JIT;
 import com.sci.bfc.util.jit.Program;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -17,8 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class OptimizationTests {
-    private String readFile(final String file) throws IOException, URISyntaxException {
-        return new String(Files.readAllBytes(Paths.get(OptimizationTests.class.getResource(file).toURI())));
+    private String readFile(final String file) {
+        try {
+            return new String(Files.readAllBytes(Paths.get(OptimizationTests.class.getResource(file).toURI())));
+        } catch(final Throwable t) {
+            return null;
+        }
     }
 
     private Program run(final List<Instruction> ir, final int tapeSize, final List<Integer> stdin) {
@@ -29,7 +31,7 @@ public final class OptimizationTests {
     }
 
     @Test
-    public void optimizationsPreserveFunctionality() throws IOException, URISyntaxException {
+    public void optimizationsPreserveFunctionality() {
         final int tapeSize = 30000;
 
         final String[] files = new String[]{
@@ -50,19 +52,18 @@ public final class OptimizationTests {
             try {
                 System.out.println("Running regression test for '" + file + "' ...");
 
-                final String input = this.readFile(file);
-                final String[] parts = input.split(";");
-                final List<Instruction> ir = Parser.parse(parts[0]);
+                final List<Instruction> ir = Parser.parse(this.readFile(file));
 
+                final String in = this.readFile(file + ".in");
                 final List<Integer> stdin;
-                if(parts.length == 2) {
-                    stdin = parts[1].chars().boxed().collect(Collectors.toList());
+                if(in != null) {
+                    stdin = in.chars().boxed().collect(Collectors.toList());
                 } else {
                     stdin = new ArrayList<>();
                 }
 
                 final Optimizer optimizer = new Optimizer(false);
-                optimizer.addStandardPasses();
+//                optimizer.addStandardPasses();
 
                 final List<Instruction> optimized = optimizer.optimize(ir);
 

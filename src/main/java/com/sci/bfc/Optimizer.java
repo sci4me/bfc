@@ -31,6 +31,8 @@ public final class Optimizer {
     }
 
     public List<Instruction> optimize(final List<Instruction> ir) {
+        if(this.opts.isEmpty()) return ir;
+
         List<Instruction> current = ir;
         int lastSize;
 

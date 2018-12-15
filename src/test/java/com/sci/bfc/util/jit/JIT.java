@@ -7,7 +7,6 @@ import jdk.internal.org.objectweb.asm.Label;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Type;
 
-import java.io.FileOutputStream;
 import java.util.List;
 
 import static jdk.internal.org.objectweb.asm.Opcodes.*;
@@ -98,42 +97,36 @@ public final class JIT {
         mv.visitEnd();
     }
 
+    private void generateAdjust(final MethodVisitor mv, final int delta) {
+        if(delta > 0) {
+            mv.visitLdcInsn(delta);
+            mv.visitInsn(IADD);
+        } else {
+            mv.visitLdcInsn(-delta);
+            mv.visitInsn(ISUB);
+        }
+    }
+
+    private void generateWrap(final MethodVisitor mv) {
+        mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Program.class), "wrap", "(I)I");
+    }
+
     private void generateInstruction(final MethodVisitor mv, final Instruction insn, final LoopHolder loopHolder) {
         if(insn instanceof Adjust) {
-            final int delta = ((Adjust) insn).delta;
-
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
             mv.visitInsn(DUP2);
             mv.visitInsn(IALOAD);
-
-            if(delta > 0) {
-                mv.visitLdcInsn(delta);
-                mv.visitInsn(IADD);
-            } else {
-                mv.visitLdcInsn(-delta);
-                mv.visitInsn(ISUB);
-            }
-
-            mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Program.class), "wrap", "(I)I");
+            this.generateAdjust(mv, ((Adjust) insn).delta);
+            this.generateWrap(mv);
             mv.visitInsn(IASTORE);
         } else if(insn instanceof Select) {
-            final int delta = ((Select) insn).delta;
-
             mv.visitVarInsn(ALOAD, 0);
             mv.visitInsn(DUP);
             mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
-
-            if(delta > 0) {
-                mv.visitLdcInsn(delta);
-                mv.visitInsn(IADD);
-            } else {
-                mv.visitLdcInsn(-delta);
-                mv.visitInsn(ISUB);
-            }
-
+            this.generateAdjust(mv, ((Select) insn).delta);
             mv.visitFieldInsn(PUTFIELD, this.className, "dp", "I");
         } else if(insn instanceof Read) {
             mv.visitVarInsn(ALOAD, 0);
@@ -176,6 +169,7 @@ public final class JIT {
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
             mv.visitLdcInsn(((Set) insn).value);
+            this.generateWrap(mv);
             mv.visitInsn(IASTORE);
         } else if(insn instanceof Mul) {
             mv.visitVarInsn(ALOAD, 0);
@@ -197,9 +191,9 @@ public final class JIT {
 
             mv.visitLdcInsn(((Mul) insn).factor);
             mv.visitInsn(IMUL);
-            mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Program.class), "wrap", "(I)I");
+            this.generateWrap(mv);
             mv.visitInsn(IADD);
-            mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Program.class), "wrap", "(I)I");
+            this.generateWrap(mv);
 
             mv.visitInsn(IASTORE);
         } else {
