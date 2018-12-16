@@ -32,11 +32,7 @@ static void assert(u8 b, char *msg);
         assert(VirtualFree(ptr - page_size, 0, MEM_RELEASE), "Failed to free memory");
     }
 
-    static void __scan_left(u8 *tape, u8 **dp) {
-        while(**dp) {
-            *dp -= 1;
-        }
-    }
+    #define __scan_left(tape, dp) while(**dp) { *dp -= 1; }
 #else
     #define _GNU_SOURCE
     #include <string.h>
@@ -52,9 +48,7 @@ static void assert(u8 b, char *msg);
         assert(!munmap(ptr, size), "Failed to free memory");
     }
 
-    static void __scan_left(u8 *tape, u8 **dp) {
-        *dp -= (u64)((void*) *dp - memrchr(tape, 0, (*dp - tape + 1)));
-    }
+    #define __scan_left(tape, dp) *dp -= (u64)((void*) *dp - memrchr(tape, 0, (*dp - tape + 1)));
 #endif
 
 #include <stdio.h>
