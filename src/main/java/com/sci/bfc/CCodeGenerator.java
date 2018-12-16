@@ -60,7 +60,7 @@ public final class CCodeGenerator implements IVisitor {
         this.emitLine("#define OPEN(loop) loop_##loop##_start: if(!*dp) goto loop_##loop##_end;");
         this.emitLine("#define CLOSE(loop) if(*dp) goto loop_##loop##_start; loop_##loop##_end:");
         this.emitLine("#define SET(value) *dp = value");
-        this.emitLine("#define MUL(offset, factor) *(dp + offset) += *dp * factor");
+        this.emitLine("#define MUL(offset, factor) if(*dp) { *(dp + offset) += *dp * factor; }");
         this.emitLine("#define SCAN_LEFT() dp -= (u64)((void*) dp - memrchr(tape, 0, (dp - tape + 1)))");
         this.emitLine("#define SCAN_RIGHT() dp += (u64)(memchr(dp, 0, tape_size - (dp - tape)) - (void*) dp)");
 
