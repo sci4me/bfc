@@ -61,12 +61,17 @@ public final class MultiLoopOptimization implements Optimization {
                     }
                 }
 
-                final boolean allPositive = deltas.values().stream().allMatch(n -> n > 0);
+                final boolean allPositive = deltas
+                        .entrySet()
+                        .stream()
+                        .filter(e -> e.getKey() != 0)
+                        .allMatch(e -> e.getValue() >= 0);
 
                 if(allPositive && dp == 0 && deltas.size() >= 2 && deltas.containsKey(0) && deltas.get(0) == -1) {
                     deltas.remove(0);
 
                     for(final Map.Entry<Integer, Integer> entry : deltas.entrySet()) {
+                        if(entry.getValue() == 0) continue;
                         result.add(new Mul(entry.getKey(), entry.getValue()));
                     }
 
