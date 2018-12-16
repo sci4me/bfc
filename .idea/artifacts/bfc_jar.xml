@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="bfc:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/bfc_jar</output-path>
+    <root id="archive" name="bfc.jar">
+      <element id="module-output" name="bfc" />
+    </root>
+  </artifact>
+</component>
