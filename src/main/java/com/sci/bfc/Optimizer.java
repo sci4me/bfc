@@ -19,6 +19,7 @@ public final class Optimizer {
     public void addStandardPasses() {
         this.addPass(Contraction.INSTANCE);
         this.addPass(ClearLoopRemoval.INSTANCE);
+        this.addPass(ScanLoopOptimization.INSTANCE);
         this.addPass(MultiLoopOptimization.INSTANCE);
         this.addPass(ClearAdjustOptimization.INSTANCE);
         this.addPass(AdjustSetOptimization.INSTANCE);

@@ -43,11 +43,15 @@ public final class CCodeGenerator implements IVisitor {
     }
 
     public String compile() {
+        this.emitLine("#define _GNU_SOURCE");
         this.emitLine("#include <stdio.h>");
+        this.emitLine("#include <string.h>");
         this.emitLine("#include <sys/mman.h>");
 
         this.emitLine("typedef unsigned char u8;");
         this.emitLine("typedef unsigned long long u64;");
+
+        this.emitLine("static const u64 tape_size = " + this.tapeSize + ";");
 
         this.emitLine("#define ADJUST(delta) *dp += delta");
         this.emitLine("#define SELECT(delta) dp += delta");
@@ -57,11 +61,11 @@ public final class CCodeGenerator implements IVisitor {
         this.emitLine("#define CLOSE(loop) if(*dp) goto loop_##loop##_start; loop_##loop##_end:");
         this.emitLine("#define SET(value) *dp = value");
         this.emitLine("#define MUL(offset, factor) *(dp + offset) += *dp * factor");
+        this.emitLine("#define SCAN_LEFT() dp -= (u64)((void*) dp - memrchr(tape, 0, (dp - tape + 1)))");
+        this.emitLine("#define SCAN_RIGHT() dp += (u64)(memchr(dp, 0, tape_size - (dp - tape)) - (void*) dp)");
 
         this.emitLine("int main() {");
         this.increaseIndent();
-        this.indent();
-        this.emitLine("u64 tape_size = " + this.tapeSize + ";");
         this.indent();
         this.emitLine("u8 *tape = (u8*) mmap(0, tape_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);");
         this.indent();
@@ -128,5 +132,17 @@ public final class CCodeGenerator implements IVisitor {
     public void visitMul(final Mul insn) {
         this.indent();
         this.emitLine("MUL(%d, %d);", insn.offset, insn.factor);
+    }
+
+    @Override
+    public void visitScanLeft(final ScanLeft insn) {
+        this.indent();
+        this.emitLine("SCAN_LEFT();");
+    }
+
+    @Override
+    public void visitScanRight(final ScanRight insn) {
+        this.indent();
+        this.emitLine("SCAN_RIGHT();");
     }
 }

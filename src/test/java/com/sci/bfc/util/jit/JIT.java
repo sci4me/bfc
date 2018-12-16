@@ -7,7 +7,6 @@ import jdk.internal.org.objectweb.asm.Label;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Type;
 
-import java.io.PrintStream;
 import java.util.List;
 
 import static jdk.internal.org.objectweb.asm.Opcodes.*;
@@ -52,7 +51,7 @@ public final class JIT {
         mv.visitVarInsn(ALOAD, 0);
         mv.visitVarInsn(ALOAD, 1);
         mv.visitVarInsn(ILOAD, 2);
-        mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(Program.class), "<init>", signature);
+        mv.visitMethodInsn(INVOKESPECIAL, Type.getInternalName(Program.class), "<init>", signature, false);
         mv.visitInsn(RETURN);
 
         mv.visitMaxs(0, 0);
@@ -76,7 +75,7 @@ public final class JIT {
                 methodIndex++;
 
                 mv.visitVarInsn(ALOAD, 0);
-                mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "m" + methodIndex, "()V");
+                mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "m" + methodIndex, "()V", false);
 
                 mv = cw.visitMethod(ACC_PRIVATE, "m" + methodIndex, "()V", null, null);
                 mv.visitCode();
@@ -109,7 +108,7 @@ public final class JIT {
     }
 
     private void generateWrap(final MethodVisitor mv) {
-        mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Program.class), "wrap", "(I)I");
+        mv.visitMethodInsn(INVOKESTATIC, Type.getInternalName(Program.class), "wrap", "(I)I", false);
     }
 
     private void generateInstruction(final MethodVisitor mv, final Instruction insn, final LoopHolder loopHolder) {
@@ -131,10 +130,10 @@ public final class JIT {
             mv.visitFieldInsn(PUTFIELD, this.className, "dp", "I");
         } else if(insn instanceof Read) {
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "read", "()V");
+            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "read", "()V", false);
         } else if(insn instanceof Write) {
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "write", "()V");
+            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "write", "()V", false);
         } else if(insn instanceof Open) {
             if(loopHolder.loop != null) {
                 loopHolder.loops.push(loopHolder.loop);
@@ -197,6 +196,12 @@ public final class JIT {
             this.generateWrap(mv);
 
             mv.visitInsn(IASTORE);
+        } else if(insn instanceof ScanLeft) {
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "scanLeft", "()V", false);
+        } else if(insn instanceof ScanRight) {
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "scanRight", "()V", false);
         } else {
             throw new RuntimeException(insn.getClass().toString());
         }

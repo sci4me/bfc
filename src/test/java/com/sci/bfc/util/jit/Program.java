@@ -31,6 +31,18 @@ public abstract class Program implements Runnable {
         this.stdout.add(this.tape[this.dp]);
     }
 
+    protected final void scanLeft() {
+        while(this.tape[this.dp] != 0) {
+            this.dp--;
+        }
+    }
+
+    protected final void scanRight() {
+        while(this.tape[this.dp] != 0) {
+            this.dp++;
+        }
+    }
+
     public final int[] getTape() {
         return this.tape;
     }
