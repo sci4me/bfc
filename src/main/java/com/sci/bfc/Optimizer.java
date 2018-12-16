@@ -8,10 +8,16 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Optimizer {
+    private final int maxPasses;
     private final boolean debug;
     private final List<Optimization> opts;
 
     public Optimizer(final boolean debug) {
+        this(10, debug);
+    }
+
+    public Optimizer(final int maxPasses, final boolean debug) {
+        this.maxPasses = maxPasses;
         this.debug = debug;
         this.opts = new ArrayList<>();
     }
@@ -62,7 +68,7 @@ public final class Optimizer {
             }
 
             if(current.size() != lastSize) sb.append(passSB.toString());
-        } while(current.size() != lastSize);
+        } while(current.size() != lastSize && pass < this.maxPasses);
 
         sb.append(String.format("Optimizations removed a total of %d instructions (%d -> %d)\n\n", ir.size() - current.size(), ir.size(), current.size()));
 
