@@ -44,7 +44,7 @@ static void assert(u8 b, char *msg);
 
     static void* __alloc(u64 size) {
         void *ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-        if(ptr == MAP_FAILED) assert(0, "Failed to allocate memory");
+        assert(ptr != MAP_FAILED, "Failed to allocate memory");
         return ptr;
     }
 
