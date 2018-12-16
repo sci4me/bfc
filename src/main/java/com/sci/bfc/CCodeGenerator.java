@@ -53,13 +53,13 @@ public final class CCodeGenerator implements IVisitor {
 
         this.emitLine("static const u64 tape_size = " + this.tapeSize + ";");
 
-        this.emitLine("#define ADJUST(delta) *dp += delta");
+        this.emitLine("#define ADJUST(base_offset, delta) *(dp + base_offset) += delta");
         this.emitLine("#define SELECT(delta) dp += delta");
-        this.emitLine("#define READ() *dp = getchar()");
-        this.emitLine("#define WRITE() putchar(*dp)");
+        this.emitLine("#define READ(base_offset) *(dp + base_offset) = getchar()");
+        this.emitLine("#define WRITE(base_offset) putchar(*(dp + base_offset))");
         this.emitLine("#define OPEN(loop) loop_##loop##_start: if(!*dp) goto loop_##loop##_end;");
         this.emitLine("#define CLOSE(loop) if(*dp) goto loop_##loop##_start; loop_##loop##_end:");
-        this.emitLine("#define SET(value) *dp = value");
+        this.emitLine("#define SET(base_offset, value) *(dp + base_offset) = value");
         this.emitLine("#define MUL(offset, factor) *(dp + offset) += *dp * factor");
         this.emitLine("#define SCAN_LEFT() dp -= (u64)((void*) dp - memrchr(tape, 0, (dp - tape + 1)))");
         this.emitLine("#define SCAN_RIGHT() dp += (u64)(memchr(dp, 0, tape_size - (dp - tape)) - (void*) dp)");
@@ -85,7 +85,7 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitAdjust(final Adjust insn) {
         this.indent();
-        this.emitLine("ADJUST(%d);", insn.delta);
+        this.emitLine("ADJUST(%d, %d);", insn.base_offset, insn.delta);
     }
 
     @Override
@@ -97,13 +97,13 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitRead(final Read insn) {
         this.indent();
-        this.emitLine("READ();");
+        this.emitLine("READ(%d);", insn.base_offset);
     }
 
     @Override
     public void visitWrite(final Write insn) {
         this.indent();
-        this.emitLine("WRITE();");
+        this.emitLine("WRITE(%d);", insn.base_offset);
     }
 
     @Override
@@ -125,7 +125,7 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitSet(final Set insn) {
         this.indent();
-        this.emitLine("SET(%d);", insn.value);
+        this.emitLine("SET(%d, %d);", insn.base_offset, insn.value);
     }
 
     @Override

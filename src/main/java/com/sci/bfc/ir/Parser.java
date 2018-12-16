@@ -10,10 +10,10 @@ public final class Parser {
         for(final char c : code.toCharArray()) {
             switch(c) {
                 case '+':
-                    result.add(new Adjust(1));
+                    result.add(new Adjust(0, 1));
                     break;
                 case '-':
-                    result.add(new Adjust(-1));
+                    result.add(new Adjust(0, -1));
                     break;
                 case '>':
                     result.add(new Select(1));
@@ -22,10 +22,10 @@ public final class Parser {
                     result.add(new Select(-1));
                     break;
                 case ',':
-                    result.add(new Read());
+                    result.add(new Read(0));
                     break;
                 case '.':
-                    result.add(new Write());
+                    result.add(new Write(0));
                     break;
                 case '[':
                     result.add(new Open());

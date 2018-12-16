@@ -117,6 +117,8 @@ public final class JIT {
             mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
+            mv.visitLdcInsn(((Adjust) insn).base_offset);
+            mv.visitInsn(IADD);
             mv.visitInsn(DUP2);
             mv.visitInsn(IALOAD);
             this.generateAdjust(mv, ((Adjust) insn).delta);
@@ -130,10 +132,12 @@ public final class JIT {
             mv.visitFieldInsn(PUTFIELD, this.className, "dp", "I");
         } else if(insn instanceof Read) {
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "read", "()V", false);
+            mv.visitLdcInsn(((Read) insn).base_offset);
+            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "read", "(I)V", false);
         } else if(insn instanceof Write) {
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "write", "()V", false);
+            mv.visitLdcInsn(((Write) insn).base_offset);
+            mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "write", "(I)V", false);
         } else if(insn instanceof Open) {
             if(loopHolder.loop != null) {
                 loopHolder.loops.push(loopHolder.loop);
@@ -168,6 +172,8 @@ public final class JIT {
             mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
+            mv.visitLdcInsn(((Set) insn).base_offset);
+            mv.visitInsn(IADD);
             mv.visitLdcInsn(((Set) insn).value);
             this.generateWrap(mv);
             mv.visitInsn(IASTORE);

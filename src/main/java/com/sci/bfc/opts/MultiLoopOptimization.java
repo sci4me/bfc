@@ -71,7 +71,7 @@ public final class MultiLoopOptimization implements Optimization {
                         result.add(new Mul(entry.getKey(), entry.getValue()));
                     }
 
-                    result.add(new Set(0));
+                    result.add(new Set(0, 0));
                     result.add(new Close());
                 } else {
                     for(int i = start; i < index; i++) result.add(ir.get(i));

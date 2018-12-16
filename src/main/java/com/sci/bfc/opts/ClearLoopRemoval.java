@@ -28,7 +28,7 @@ public final class ClearLoopRemoval implements Optimization {
         int index = 0;
         while(index < ir.size()) {
             if(ClearLoopRemoval.matchClear(ir, index)) {
-                result.add(new Set(0));
+                result.add(new Set(0, 0));
                 index += 3;
             } else {
                 result.add(ir.get(index));

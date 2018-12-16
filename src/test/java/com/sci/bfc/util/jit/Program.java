@@ -23,12 +23,12 @@ public abstract class Program implements Runnable {
         this.dp = 0;
     }
 
-    protected final void read() {
-        this.tape[this.dp] = Program.wrap(this.stdin.remove(0));
+    protected final void read(final int base_offset) {
+        this.tape[this.dp + base_offset] = Program.wrap(this.stdin.remove(0));
     }
 
-    protected final void write() {
-        this.stdout.add(this.tape[this.dp]);
+    protected final void write(final int base_offset) {
+        this.stdout.add(this.tape[this.dp + base_offset]);
     }
 
     protected final void scanLeft() {

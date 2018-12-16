@@ -28,7 +28,7 @@ public final class SetAdjustOptimization implements Optimization {
             if(SetAdjustOptimization.matchSetAdjust(ir, index)) {
                 final int value = ((Set) ir.get(index)).value;
                 final int delta = ((Adjust) ir.get(index + 1)).delta;
-                result.add(new Set(value + delta));
+                result.add(new Set(0,value + delta));
                 index += 2;
             } else {
                 result.add(ir.get(index));

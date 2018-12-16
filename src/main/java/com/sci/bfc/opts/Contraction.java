@@ -22,6 +22,21 @@ public final class Contraction implements Optimization {
         }
     }
 
+    private static int getOffset(final Instruction insn) {
+        if(insn instanceof Adjust) {
+            return ((Adjust) insn).base_offset;
+        } else {
+            return 0;
+        }
+    }
+
+    private static boolean match(final Instruction a, final Instruction b) {
+        if(!a.getClass().equals(b.getClass())) return false;
+        final int offset_a = Contraction.getOffset(a);
+        final int offset_b = Contraction.getOffset(b);
+        return offset_a == offset_b;
+    }
+
     public static final Contraction INSTANCE = new Contraction();
 
     private Contraction() {
@@ -35,19 +50,20 @@ public final class Contraction implements Optimization {
         while(index < ir.size()) {
             final Instruction insn = ir.get(index);
             if(Contraction.isContractable(insn)) {
-                final Class<?> clazz = insn.getClass();
                 int delta = Contraction.getDelta(insn);
 
                 int j = index + 1;
-                while(j < ir.size() && clazz.isInstance(ir.get(j))) {
+                while(j < ir.size() && Contraction.match(insn, ir.get(j))) {
                     delta += Contraction.getDelta(ir.get(j));
                     j++;
                 }
 
-                try {
-                    result.add((Instruction) clazz.getConstructor(int.class).newInstance(delta));
-                } catch(final Throwable t) {
-                    throw new RuntimeException(t);
+                if(insn instanceof Adjust) {
+                    result.add(new Adjust(((Adjust) insn).base_offset, delta));
+                } else if(insn instanceof Select) {
+                    result.add(new Select(delta));
+                } else {
+                    throw new RuntimeException();
                 }
 
                 index = j;
