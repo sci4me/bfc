@@ -3,6 +3,10 @@ package com.sci.bfc;
 import com.sci.bfc.ir.*;
 import com.sci.bfc.util.Stack;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public final class CCodeGenerator implements IVisitor {
@@ -42,44 +46,32 @@ public final class CCodeGenerator implements IVisitor {
         this.sb.append('\n');
     }
 
+    private String readTemplate() {
+        try {
+            final StringBuilder sb = new StringBuilder();
+
+            final InputStream tin = CCodeGenerator.class.getResourceAsStream("/template.bf.c");
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(tin));
+
+            String line;
+            while((line = reader.readLine()) != null) {
+                sb.append(line);
+                sb.append('\n');
+            }
+
+            return sb.toString();
+        } catch(final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String compile() {
-        this.emitLine("#define _GNU_SOURCE");
-        this.emitLine("#include <stdio.h>");
-        this.emitLine("#include <string.h>");
-        this.emitLine("#include <sys/mman.h>");
-
-        this.emitLine("typedef unsigned char u8;");
-        this.emitLine("typedef unsigned long long u64;");
-
-        this.emitLine("static const u64 tape_size = " + this.tapeSize + ";");
-
-        this.emitLine("#define ADJUST(base_offset, delta) *(dp + base_offset) += delta");
-        this.emitLine("#define SELECT(delta) dp += delta");
-        this.emitLine("#define READ(base_offset) *(dp + base_offset) = getchar()");
-        this.emitLine("#define WRITE(base_offset) putchar(*(dp + base_offset))");
-        this.emitLine("#define OPEN(loop) loop_##loop##_start: if(!*dp) goto loop_##loop##_end;");
-        this.emitLine("#define CLOSE(loop) if(*dp) goto loop_##loop##_start; loop_##loop##_end:");
-        this.emitLine("#define SET(base_offset, value) *(dp + base_offset) = value");
-        this.emitLine("#define MUL(offset, factor) *(dp + offset) += *dp * factor");
-        this.emitLine("#define SCAN_LEFT() dp -= (u64)((void*) dp - memrchr(tape, 0, (dp - tape + 1)))");
-        this.emitLine("#define SCAN_RIGHT() dp += (u64)(memchr(dp, 0, tape_size - (dp - tape)) - (void*) dp)");
-
-        this.emitLine("int main() {");
         this.increaseIndent();
-        this.indent();
-        this.emitLine("u8 *tape = (u8*) mmap(0, tape_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);");
-        this.indent();
-        this.emitLine("u8 *dp = tape;");
-
         this.ir.forEach(n -> n.accept(this));
+        this.decreaseIndent();
 
-        this.indent();
-        this.emitLine("munmap(tape, tape_size);");
-        this.indent();
-        this.emitLine("return 0;");
-        this.emit("}");
-
-        return this.sb.toString();
+        final String template = this.readTemplate();
+        return String.format(template, this.tapeSize, this.sb.toString().trim());
     }
 
     @Override
