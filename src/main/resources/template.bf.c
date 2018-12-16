@@ -43,11 +43,13 @@ static void assert(u8 b, char *msg);
     #include <sys/mman.h>
 
     static void* __alloc(u64 size) {
-        return mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        void *ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        if(ptr == MAP_FAILED) assert(0, "Failed to allocate memory");
+        return ptr;
     }
 
     static void __free(void* ptr, u64 size) {
-        munmap(ptr, size);
+        assert(!munmap(ptr, size), "Failed to free memory");
     }
 
     static void __scan_left(u8 *tape, u8 **dp) {
