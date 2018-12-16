@@ -1,16 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef unsigned char u8;
 typedef int s32;
 typedef unsigned long long u64;
 
-static void assert(u8 b, char *msg) {
-    if(!b) {
-        fprintf(stderr, "Assertion failed: %s\n", msg);
-        exit(1);
-    }
-}
+static void assert(u8 b, char *msg);
 
 #ifdef _WIN32
     #include <windows.h>
@@ -23,7 +15,7 @@ static void assert(u8 b, char *msg) {
 
     static void* __alloc(u64 size) {
         s32 page_size = get_page_size();
-        s32 total_size = (size + page_size - 1) & -page_size;
+        u64 total_size = (size + page_size - 1) & -page_size;
         total_size += page_size * 2;
 
         void *ptr = VirtualAlloc(0, total_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
@@ -47,22 +39,31 @@ static void assert(u8 b, char *msg) {
     }
 #else
     #define _GNU_SOURCE
-
     #include <string.h>
     #include <sys/mman.h>
 
-    static void *__alloc(u64 size) {
+    static void* __alloc(u64 size) {
         return mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     }
 
     static void __free(void* ptr, u64 size) {
-        munmap(tape, tape_size);
+        munmap(ptr, size);
     }
 
     static void __scan_left(u8 *tape, u8 **dp) {
-        *dp -= (u64)((void*) *dp - memrchr(tape, 0, (*dp - tape + 1)))
+        *dp -= (u64)((void*) *dp - memrchr(tape, 0, (*dp - tape + 1)));
     }
 #endif
+
+#include <stdio.h>
+#include <stdlib.h>
+
+static void assert(u8 b, char *msg) {
+    if(!b) {
+        fprintf(stderr, "Assertion failed: %s\n", msg);
+        exit(1);
+    }
+}
 
 static const u64 tape_size = __TAPE_SIZE__;
 
