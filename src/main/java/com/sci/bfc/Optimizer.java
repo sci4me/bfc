@@ -25,6 +25,7 @@ public final class Optimizer {
         this.addPass(SetDeduplication.INSTANCE);
         this.addPass(SetAdjustOptimization.INSTANCE);
         this.addPass(NullInstructionRemoval.INSTANCE);
+        this.addPass(ReadClobberOptimization.INSTANCE);
     }
 
     public void addPass(final Optimization opt) {
@@ -63,7 +64,7 @@ public final class Optimizer {
             if(current.size() != lastSize) sb.append(passSB.toString());
         } while(current.size() != lastSize);
 
-        sb.append(String.format("Optimizations removed a total of %d instructions\n\n", ir.size() - current.size()));
+        sb.append(String.format("Optimizations removed a total of %d instructions (%d -> %d)\n\n", ir.size() - current.size(), ir.size(), current.size()));
 
         if(this.debug) System.out.println(sb.toString());
 
