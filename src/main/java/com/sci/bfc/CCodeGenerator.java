@@ -34,7 +34,7 @@ public final class CCodeGenerator implements IVisitor {
     }
 
     private void indent() {
-        for(int i = 0; i < this.level; i++) this.emit("    ");
+        for (int i = 0; i < this.level; i++) this.emit("    ");
     }
 
     private void emit(final String fmt, final Object... args) {
@@ -54,13 +54,14 @@ public final class CCodeGenerator implements IVisitor {
             final BufferedReader reader = new BufferedReader(new InputStreamReader(tin));
 
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
                 sb.append(line);
                 sb.append('\n');
             }
 
             return sb.toString();
-        } catch(final IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -71,7 +72,9 @@ public final class CCodeGenerator implements IVisitor {
         this.decreaseIndent();
 
         final String template = this.readTemplate();
-        return String.format(template, this.tapeSize, this.sb.toString().trim());
+        return template
+                .replace("__TAPE_SIZE__", String.valueOf(this.tapeSize))
+                .replace("__CODE__", this.sb.toString());
     }
 
     @Override
