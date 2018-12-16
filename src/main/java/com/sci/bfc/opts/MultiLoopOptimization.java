@@ -64,12 +64,15 @@ public final class MultiLoopOptimization implements Optimization {
                 if(dp == 0 && deltas.size() >= 2 && deltas.containsKey(0) && deltas.get(0) == -1) {
                     deltas.remove(0);
 
+                    result.add(new Open());
+
                     for(final Map.Entry<Integer, Integer> entry : deltas.entrySet()) {
                         if(entry.getValue() == 0) continue;
                         result.add(new Mul(entry.getKey(), entry.getValue()));
                     }
 
                     result.add(new Set(0));
+                    result.add(new Close());
                 } else {
                     for(int i = start; i < index; i++) result.add(ir.get(i));
                 }

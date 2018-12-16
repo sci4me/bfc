@@ -172,15 +172,6 @@ public final class JIT {
             this.generateWrap(mv);
             mv.visitInsn(IASTORE);
         } else if(insn instanceof Mul) {
-            final Label skip = new Label();
-
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
-            mv.visitInsn(IALOAD);
-            mv.visitJumpInsn(IFEQ, skip);
-
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
             mv.visitVarInsn(ALOAD, 0);
@@ -205,7 +196,6 @@ public final class JIT {
             this.generateWrap(mv);
 
             mv.visitInsn(IASTORE);
-            mv.visitLabel(skip);
         } else if(insn instanceof ScanLeft) {
             mv.visitVarInsn(ALOAD, 0);
             mv.visitMethodInsn(INVOKEVIRTUAL, this.className, "scanLeft", "()V", false);
