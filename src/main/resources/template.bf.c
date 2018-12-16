@@ -69,16 +69,16 @@ static void assert(u8 b, char *msg) {
 
 static const u64 tape_size = __TAPE_SIZE__;
 
-#define ADJUST(base_offset, delta) *(dp + base_offset) += delta
-#define SELECT(delta) dp += delta
-#define READ(base_offset) *(dp + base_offset) = getchar()
-#define WRITE(base_offset) putchar(*(dp + base_offset)); fflush(stdout)
+#define ADJUST(base_offset, delta) *(dp + base_offset) += delta;
+#define SELECT(delta) dp += delta;
+#define READ(base_offset) *(dp + base_offset) = getchar();
+#define WRITE(base_offset) putchar(*(dp + base_offset)); fflush(stdout);
 #define OPEN(loop) loop_##loop##_start: if(!*dp) goto loop_##loop##_end;
 #define CLOSE(loop) if(*dp) goto loop_##loop##_start; loop_##loop##_end:
-#define SET(base_offset, value) *(dp + base_offset) = value
-#define MUL(offset, factor) *(dp + offset) += *dp * factor
-#define SCAN_LEFT() __scan_left(tape, &dp)
-#define SCAN_RIGHT() dp += (u64)(memchr(dp, 0, tape_size - (dp - tape)) - (void*) dp)
+#define SET(base_offset, value) *(dp + base_offset) = value;
+#define MUL(offset, factor) *(dp + offset) += *dp * factor;
+#define SCAN_LEFT() __scan_left(tape, &dp);
+#define SCAN_RIGHT() dp += (u64)(memchr(dp, 0, tape_size - (dp - tape)) - (void*) dp);
 
 int main() {
     u8 *tape = (u8*) __alloc(tape_size);

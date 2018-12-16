@@ -80,31 +80,31 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitAdjust(final Adjust insn) {
         this.indent();
-        this.emitLine("ADJUST(%d, %d);", insn.base_offset, insn.delta);
+        this.emitLine("ADJUST(%d, %d)", insn.base_offset, insn.delta);
     }
 
     @Override
     public void visitSelect(final Select insn) {
         this.indent();
-        this.emitLine("SELECT(%d);", insn.delta);
+        this.emitLine("SELECT(%d)", insn.delta);
     }
 
     @Override
     public void visitRead(final Read insn) {
         this.indent();
-        this.emitLine("READ(%d);", insn.base_offset);
+        this.emitLine("READ(%d)", insn.base_offset);
     }
 
     @Override
     public void visitWrite(final Write insn) {
         this.indent();
-        this.emitLine("WRITE(%d);", insn.base_offset);
+        this.emitLine("WRITE(%d)", insn.base_offset);
     }
 
     @Override
     public void visitOpen(final Open insn) {
         this.indent();
-        this.emitLine("OPEN(%d);", this.loop);
+        this.emitLine("OPEN(%d)", this.loop);
         this.loops.push(this.loop);
         this.loop++;
         this.increaseIndent();
@@ -114,30 +114,30 @@ public final class CCodeGenerator implements IVisitor {
     public void visitClose(final Close insn) {
         this.decreaseIndent();
         this.indent();
-        this.emitLine("CLOSE(%d);", this.loops.pop());
+        this.emitLine("CLOSE(%d)", this.loops.pop());
     }
 
     @Override
     public void visitSet(final Set insn) {
         this.indent();
-        this.emitLine("SET(%d, %d);", insn.base_offset, insn.value);
+        this.emitLine("SET(%d, %d)", insn.base_offset, insn.value);
     }
 
     @Override
     public void visitMul(final Mul insn) {
         this.indent();
-        this.emitLine("MUL(%d, %d);", insn.offset, insn.factor);
+        this.emitLine("MUL(%d, %d)", insn.offset, insn.factor);
     }
 
     @Override
     public void visitScanLeft(final ScanLeft insn) {
         this.indent();
-        this.emitLine("SCAN_LEFT();");
+        this.emitLine("SCAN_LEFT()");
     }
 
     @Override
     public void visitScanRight(final ScanRight insn) {
         this.indent();
-        this.emitLine("SCAN_RIGHT();");
+        this.emitLine("SCAN_RIGHT()");
     }
 }

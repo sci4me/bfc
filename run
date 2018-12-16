@@ -1,4 +1,4 @@
 #!/bin/bash
 ./compile $1
-./a.out
-rm a.out
+./bf.out
+rm bf.out
