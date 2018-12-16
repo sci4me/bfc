@@ -74,7 +74,7 @@ public final class CCodeGenerator implements IVisitor {
         final String template = this.readTemplate();
         return template
                 .replace("__TAPE_SIZE__", String.valueOf(this.tapeSize))
-                .replace("__CODE__", this.sb.toString());
+                .replace("__CODE__", this.sb.toString().trim());
     }
 
     @Override
