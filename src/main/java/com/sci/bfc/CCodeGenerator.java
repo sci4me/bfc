@@ -15,14 +15,10 @@ public final class CCodeGenerator implements IVisitor {
     private final StringBuilder sb;
     private int level;
 
-    private final Stack<Integer> loops;
-    private int loop;
-
     public CCodeGenerator(final List<Instruction> ir, final int tapeSize) {
         this.ir = ir;
         this.tapeSize = tapeSize;
         this.sb = new StringBuilder();
-        this.loops = new Stack<>();
     }
 
     private void increaseIndent() {
@@ -104,9 +100,7 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitOpen(final Open insn) {
         this.indent();
-        this.emitLine("OPEN(%d)", this.loop);
-        this.loops.push(this.loop);
-        this.loop++;
+        this.emitLine("OPEN()");
         this.increaseIndent();
     }
 
@@ -114,7 +108,7 @@ public final class CCodeGenerator implements IVisitor {
     public void visitClose(final Close insn) {
         this.decreaseIndent();
         this.indent();
-        this.emitLine("CLOSE(%d)", this.loops.pop());
+        this.emitLine("CLOSE()");
     }
 
     @Override

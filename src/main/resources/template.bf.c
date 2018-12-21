@@ -67,8 +67,8 @@ static const u64 tape_size = __TAPE_SIZE__;
 #define SELECT(delta) dp += delta;
 #define READ(base_offset) *(dp + base_offset) = getchar();
 #define WRITE(base_offset) putchar(*(dp + base_offset)); fflush(stdout);
-#define OPEN(loop) loop_##loop##_start: if(!*dp) goto loop_##loop##_end;
-#define CLOSE(loop) if(*dp) goto loop_##loop##_start; loop_##loop##_end:
+#define OPEN() while(*dp) {
+#define CLOSE() }
 #define SET(base_offset, value) *(dp + base_offset) = value;
 #define MUL(offset, factor) *(dp + offset) += *dp * factor;
 #define SCAN_LEFT() __scan_left(tape, &dp);
