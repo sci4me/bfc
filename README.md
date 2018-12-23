@@ -30,10 +30,24 @@ The rest are generated from the input IR by various optimizations.
 
 ## Optimizations
 ### Contraction
-This optimization essentially performs "run-length encoding" on 'Adjust' instructions (`+` and `-`). For example: `+++` becomes `adjust 3`.
+This optimization essentially performs "run-length encoding" on 'Adjust' instructions (`+` and `-`). For example: 
+```text
++++
+```
+Becomes:
+```text
+adjust 3
+```
 
 ### Clear Loop Removal
-This optimization turns loops of the following form: `[-]` into a single instruction: `set 0`.
+This optimization turns loops of the following form:
+```text
+[-]
+```
+into a single instruction:
+```text
+set 0
+```
 
 ### Scan Loop Optimization
 This optimization acts on two specific instances of loops: `[>]` and `[<]`. The optimization generates code that uses `memchr` and `memrchr` respectively. On Windows, `memrchr` is not supported so `[<]` just turns into a regular scan loop.
