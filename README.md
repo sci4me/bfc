@@ -3,7 +3,7 @@ _bfc_ is an optimizing Brainfuck to C compiler.
 
 ## Intermediate Representation
 The compiler uses the a linear IR consisting of instructions of the following types:
-```
+```text
 Adjust        :: + or -
 Select        :: > or <
 Read          :: ,
@@ -17,7 +17,7 @@ ScanRight     :: [>]
 ```
 
 The compiler parses Brainfuck code into the following instructions:
-```
+```text
 Adjust
 Select
 Read
