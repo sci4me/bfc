@@ -10,11 +10,11 @@ import java.util.function.BiConsumer;
 
 public final class OffsetOptimization implements Optimization {
     private static boolean counts(final Instruction insn) {
-        if(insn instanceof Adjust) return ((Adjust) insn).base_offset == 0;
+        if(insn instanceof Adjust) return insn.baseOffset() == 0;
         else if(insn instanceof Select) return true;
-        else if(insn instanceof Read) return ((Read) insn).base_offset == 0;
-        else if(insn instanceof Write) return ((Write) insn).base_offset == 0;
-        else if(insn instanceof Set) return ((Set) insn).base_offset == 0;
+        else if(insn instanceof Read) return insn.baseOffset() == 0;
+        else if(insn instanceof Write) return insn.baseOffset() == 0;
+        else if(insn instanceof Set) return insn.baseOffset() == 0;
         else return false;
     }
 

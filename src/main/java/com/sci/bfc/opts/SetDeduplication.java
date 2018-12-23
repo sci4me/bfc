@@ -22,7 +22,7 @@ public final class SetDeduplication implements Optimization {
             if(insn instanceof Set) {
                 int j = index + 1;
 
-                while(j < ir.size() && ir.get(j) instanceof Set) {
+                while(j < ir.size() && ir.get(j) instanceof Set && ir.get(j).baseOffset() == insn.baseOffset()) {
                     j++;
                 }
 

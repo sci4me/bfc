@@ -1,7 +1,6 @@
 package com.sci.bfc;
 
 import com.sci.bfc.ir.*;
-import com.sci.bfc.util.Stack;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -76,7 +75,7 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitAdjust(final Adjust insn) {
         this.indent();
-        this.emitLine("ADJUST(%d, %d)", insn.base_offset, insn.delta);
+        this.emitLine("ADJUST(%d, %d)", insn.baseOffset(), insn.delta);
     }
 
     @Override
@@ -88,13 +87,13 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitRead(final Read insn) {
         this.indent();
-        this.emitLine("READ(%d)", insn.base_offset);
+        this.emitLine("READ(%d)", insn.baseOffset());
     }
 
     @Override
     public void visitWrite(final Write insn) {
         this.indent();
-        this.emitLine("WRITE(%d)", insn.base_offset);
+        this.emitLine("WRITE(%d)", insn.baseOffset());
     }
 
     @Override
@@ -114,7 +113,7 @@ public final class CCodeGenerator implements IVisitor {
     @Override
     public void visitSet(final Set insn) {
         this.indent();
-        this.emitLine("SET(%d, %d)", insn.base_offset, insn.value);
+        this.emitLine("SET(%d, %d)", insn.baseOffset(), insn.value);
     }
 
     @Override

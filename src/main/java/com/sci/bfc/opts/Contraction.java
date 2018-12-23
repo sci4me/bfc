@@ -22,19 +22,9 @@ public final class Contraction implements Optimization {
         }
     }
 
-    private static int getOffset(final Instruction insn) {
-        if(insn instanceof Adjust) {
-            return ((Adjust) insn).base_offset;
-        } else {
-            return 0;
-        }
-    }
-
     private static boolean match(final Instruction a, final Instruction b) {
         if(!a.getClass().equals(b.getClass())) return false;
-        final int offset_a = Contraction.getOffset(a);
-        final int offset_b = Contraction.getOffset(b);
-        return offset_a == offset_b;
+        return a.baseOffset() == b.baseOffset();
     }
 
     public static final Contraction INSTANCE = new Contraction();
@@ -59,7 +49,7 @@ public final class Contraction implements Optimization {
                 }
 
                 if(insn instanceof Adjust) {
-                    result.add(new Adjust(((Adjust) insn).base_offset, delta));
+                    result.add(new Adjust(insn.baseOffset(), delta));
                 } else if(insn instanceof Select) {
                     result.add(new Select(delta));
                 } else {

@@ -13,6 +13,7 @@ public final class ReadClobberOptimization implements Optimization {
         if(index + 1 >= ir.size()) return false;
         if(!(ir.get(index) instanceof Set || ir.get(index) instanceof Adjust)) return false;
         if(!(ir.get(index + 1) instanceof Read)) return false;
+        if(ir.get(index).baseOffset() != ir.get(index + 1).baseOffset()) return false;
         return true;
     }
 

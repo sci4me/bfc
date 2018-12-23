@@ -12,6 +12,7 @@ public final class AdjustSetOptimization implements Optimization {
         if(index + 1 >= ir.size()) return false;
         if(!(ir.get(index) instanceof Adjust)) return false;
         if(!(ir.get(index + 1) instanceof Set)) return false;
+        if(ir.get(index).baseOffset() != ir.get(index + 1).baseOffset()) return false;
         return true;
     }
 
