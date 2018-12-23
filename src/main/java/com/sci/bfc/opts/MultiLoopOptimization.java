@@ -68,7 +68,7 @@ public final class MultiLoopOptimization implements Optimization {
 
                     for(final Map.Entry<Integer, Integer> entry : deltas.entrySet()) {
                         if(entry.getValue() == 0) continue;
-                        result.add(new Mul(entry.getKey(), entry.getValue()));
+                        result.add(new MAdd(entry.getKey(), entry.getValue()));
                     }
 
                     result.add(new Set(0, 0));

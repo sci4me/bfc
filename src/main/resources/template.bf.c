@@ -70,7 +70,7 @@ static const u64 tape_size = __TAPE_SIZE__;
 #define OPEN() while(*dp) {
 #define CLOSE() }
 #define SET(base_offset, value) *(dp + base_offset) = value;
-#define MUL(offset, factor) *(dp + offset) += *dp * factor;
+#define MADD(offset, factor) *(dp + offset) += *dp * factor;
 #define SCAN_LEFT() __scan_left(tape, &dp);
 #define SCAN_RIGHT() dp += (u64)(memchr(dp, 0, tape_size - (dp - tape)) - (void*) dp);
 

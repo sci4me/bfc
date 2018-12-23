@@ -15,7 +15,7 @@ public interface IVisitor {
 
     void visitSet(final Set insn);
 
-    void visitMul(final Mul insn);
+    void visitMAdd(final MAdd insn);
 
     void visitScanLeft(final ScanLeft insn);
 

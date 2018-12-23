@@ -177,12 +177,12 @@ public final class JIT {
             mv.visitLdcInsn(((Set) insn).value);
             this.generateWrap(mv);
             mv.visitInsn(IASTORE);
-        } else if(insn instanceof Mul) {
+        } else if(insn instanceof MAdd) {
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "tape", "[I");
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
-            mv.visitLdcInsn(((Mul) insn).offset);
+            mv.visitLdcInsn(((MAdd) insn).offset);
             mv.visitInsn(IADD);
 
             mv.visitInsn(DUP2);
@@ -195,7 +195,7 @@ public final class JIT {
             mv.visitFieldInsn(GETFIELD, this.className, "dp", "I");
             mv.visitInsn(IALOAD);
 
-            mv.visitLdcInsn(((Mul) insn).factor);
+            mv.visitLdcInsn(((MAdd) insn).factor);
             mv.visitInsn(IMUL);
             this.generateWrap(mv);
             mv.visitInsn(IADD);

@@ -117,9 +117,9 @@ public final class CCodeGenerator implements IVisitor {
     }
 
     @Override
-    public void visitMul(final Mul insn) {
+    public void visitMAdd(final MAdd insn) {
         this.indent();
-        this.emitLine("MUL(%d, %d)", insn.offset, insn.factor);
+        this.emitLine("MADD(%d, %d)", insn.offset, insn.factor);
     }
 
     @Override
