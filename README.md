@@ -42,7 +42,7 @@ This optimization acts on two specific instances of loops: `[>]` and `[<]`. The 
 This optimization acts on balanced loops (loops in which the data pointer ends where it began) that only contain adjust and select (`>` and `<`) instructions. It extracts 'multiply and add' (_MADD_) operations from the loop and generates individual instructions for them.
 
 For example:
-```
+```text
 [
     -
     >
@@ -53,7 +53,7 @@ For example:
 ]
 ```
 Turns into:
-```
+```text
 madd [1] 3
 madd [2] 2
 set 0
@@ -63,40 +63,40 @@ Notice that this optimization only occurs if the loop decrements its condition c
 
 ### Adjust Set Optimization
 This optimization simply removes adjust operations which occur directly before set operations as they are entirely redundant. For example:
-```
+```text
 adjust 5
 set 0
 ```
 Turns into:
-```
+```text
 set 0
 ```
 
 ### Set Deduplication
 This optimization turns multiple adjacent set instructions into a single set instruction, namely, the last one; the preceeding ones are redundant. For example:
-```
+```text
 set 0
 set 5
 ```
 Turns into:
-```
+```text
 set 5
 ```
 
 ### Set Adjust Optimization
 This optimization detects adjust instructions that occur directly after set instructions and combine them into a single set instruction. For example:
-```
+```text
 set 0
 adjust 5
 ```
 Turns into:
-```
+```text
 set 5
 ```
 
 ### Null Instruction Removal
 This optimization removes adjust and select instructions whose value is zero. For example:
-```
+```text
 adjust 0
 select 0
 ```
@@ -104,18 +104,18 @@ Would turn into nothing.
 
 ### Read Clobber Optimization
 This optimization removes set or adjust instructions that occur directly before a read instruction as the read will overwrite them. For example:
-```
+```text
 adjust 5
 read
 ```
 Turns into:
-```
+```text
 read
 ```
 
 ### Offset Optimization
 This optimization calculates data pointer offsets for certain instructions by counting the preceeding select instructions and adds those offsets to the instructions, allowing the select instructions to be eliminated. This is best explained visually:
-```
+```text
 adjust 3
 select 5
 adjust -2
@@ -128,7 +128,7 @@ open
 close
 ```
 Turns into:
-```
+```text
 adjust [0] 3
 adjust [5] -2
 set [7] 0
