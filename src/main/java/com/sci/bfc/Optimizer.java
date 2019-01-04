@@ -28,8 +28,8 @@ public final class Optimizer {
         this.addPass(ScanLoopOptimization.INSTANCE);
         this.addPass(MultiLoopOptimization.INSTANCE);
         this.addPass(AdjustSetOptimization.INSTANCE);
-        this.addPass(SetDeduplication.INSTANCE);
         this.addPass(SetAdjustOptimization.INSTANCE);
+        this.addPass(SetDeduplication.INSTANCE);
         this.addPass(NullInstructionRemoval.INSTANCE);
         this.addPass(ReadClobberOptimization.INSTANCE);
         this.addPass(OffsetOptimization.INSTANCE);

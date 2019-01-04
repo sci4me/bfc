@@ -73,6 +73,8 @@ public final class OffsetOptimization implements Optimization {
                         adjust.accept(dp, ((Adjust) insn).delta);
                     } else if(insn instanceof Select) {
                         dp += ((Select) insn).delta;
+                    } else if(insn instanceof Set) {
+                        result.add(new Set(dp, ((Set) insn).value));
                     } else {
                         dump.run();
                         if(dp != 0) result.add(new Select(dp));
@@ -82,8 +84,6 @@ public final class OffsetOptimization implements Optimization {
                             result.add(new Read(dp));
                         } else if(insn instanceof Write) {
                             result.add(new Write(dp));
-                        } else if(insn instanceof Set) {
-                            result.add(new Set(dp, ((Set) insn).value));
                         } else {
                             throw new RuntimeException();
                         }
